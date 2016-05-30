@@ -19,13 +19,10 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 $('#overview_epics').append('<div id="' + id + '"><p><b>Epic: ' + epic.key + ' ' + epic.summary + ', SP: ' + epic.sp + ' Time spent: ' + epic.timeSpent + ', Total: ' + epic.aggregateTimeSpent + '</b></p></div>');
             }
 
-            // function appendStory(id, story) {
-            //     var sp = story.fields.customfield_10263;
-            //     var timeSpent = story.fields.timespent;
-            //     var aggregatetimespent = story.fields.aggregatetimespent;
-            //     $('#' + id).append('<p>---------Story: ' + story.key + ' ' + story.fields.summary + ', SP: ' + sp + ' Time spent: ' + timeSpent + ', Total: ' + aggregatetimespent + '</p>');
-            // }
-            //
+            function appendStory(id, story) {
+                $('#' + id).append('<p>---------Story: ' + story.key + ' ' + story.summary + ', SP: ' + story.sp + ' Time spent: ' + story.timeSpent + ', Total: ' + story.aggregateTimeSpent + '</p>');
+            }
+
             // function appendSubtask(id, subtask) {
             //     var sp = subtask.fields.customfield_10263;
             //     var timeSpent = subtask.fields.timespent;
@@ -33,15 +30,11 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             //     $('#' + id).append('<p>Subtask: ' + subtask.key + ' ' + subtask.fields.summary + ', SP: ' + sp + ' Time spent: ' + timeSpent + ', Total: ' + aggregatetimespent + '</p>');
             // }
 
-            function drawChart() {
+            function drawChart(epicData) {
                 google.charts.load('current', {packages: ['corechart', 'bar']});
                 google.charts.setOnLoadCallback(drawBarColors);
 
                 function drawBarColors() {
-                    var epicData = [
-                        ['a', 100, 10],
-                        ['b', 200, 10]
-                    ];
                     var temp = [['Epic', 'PD Total', 'PD Done']];
                     epicData.forEach(function (entry) {
                         temp.push(entry);
@@ -65,34 +58,37 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 }
             }
 
-
-
             function init() {
-                drawChart();
+                drawChart([
+                    ['a', 100, 10],
+                    ['b', 200, 10]
+                ]);
 
                 $.when(window.jiraUtils.getEpics(config.project, config.version, config.team))
                     .done(function (epicResponse) {
-                        debugger;
                         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
+
                         epics.forEach(function (epic, i) {
-                            var id = 'overview_epic_' + i;
+                            var epicElementId = 'overview_epic_' + i;
 
-                            appendEpic(id, epic);
+                            appendEpic(epicElementId, epic);
 
-//                             $.when(loadStories(epic.key))
-//                                 .done(function (jiraResponse) {
-//                                     getIssues(jiraResponse).forEach(function (story, i) {
-//                                         appendStory(id, story);
-// //													$.when(loadSubtasks(story.key))
-// //															.done(function (jiraResponse) {
-// //																getIssues(jiraResponse).forEach(function (subtask, i) {
-// //																	appendSubtask(id, subtask);
-// //																});
-// //															});
-//                                     });
-//                                 });
+                            $.when(window.jiraUtils.getStories(epic.key))
+                                .done(function (storyResponse) {
+                                    var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
+                                    stories.forEach(function (story) {
+                                        appendStory(epicElementId, story);
+
+                                        // $.when(window.jiraUtils.getSubtasks(story.key))
+                                        //     .done(function (subtaskResponse) {
+                                        //         var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
+                                        //         subtasks.forEach(function (subtask) {
+                                        //             appendStory(epicElementId, subtask);
+                                        //         });
+                                        //     });
+                                    });
+                                });
                         });
-
                     });
             }
         }
