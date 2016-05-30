@@ -81,7 +81,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                             stories = storyResponses.map(function (storyResponse) {
                                 return window.jiraUtils.getIssuesFromResponse(storyResponse);
                             });
-                            return stories;
+                            deferred.resolve(stories);
                         });
                         return deferred.promise;
                     })
