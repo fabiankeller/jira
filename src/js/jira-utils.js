@@ -46,5 +46,6 @@
                 children: []
             });
         });
+        return issueProcessed;
     }
 })();
