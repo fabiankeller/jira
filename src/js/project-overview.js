@@ -64,8 +64,8 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     ['b', 200, 10]
                 ]);
 
-                $.when(window.jiraUtils.getEpics(config.project, config.version, config.team))
-                    .done(function (epicResponse) {
+                window.jiraUtils.getEpics(config.project, config.version, config.team)
+                    .then(function (epicResponse) {
                         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
 
                         epics.forEach(function (epic, i) {
@@ -73,8 +73,8 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
                             appendEpic(epicElementId, epic);
 
-                            $.when(window.jiraUtils.getStories(epic.key))
-                                .done(function (storyResponse) {
+                            window.jiraUtils.getStories(epic.key)
+                                .then(function (storyResponse) {
                                     var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
                                     stories.forEach(function (story) {
                                         appendStory(epicElementId, story);
