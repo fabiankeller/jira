@@ -12,12 +12,12 @@
     function jqlQuery(queryString) {
         var url = '/rest/api/2/search?jql=' + encodeURI(queryString);
         console.log('performing jql query:', url);
-        return $.ajax({
+        return Q($.ajax({
             url: url,
             contentType: 'application/json',
             async: false,
             dataType: 'json'
-        });
+        }));
     }
 
     function getEpics(project, version, team) {
