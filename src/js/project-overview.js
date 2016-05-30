@@ -66,7 +66,6 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
 
                 var epics = [];
-                var stories = [];
                 window.jiraUtils.getEpics(config.project, config.version, config.team)
                     .then(function (epicResponse) {
                         epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
@@ -78,15 +77,37 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                         });
 
                         window.Q.all(calls).then(function (storyResponses) {
-                            stories = storyResponses.map(function (storyResponse) {
+                            var stories = storyResponses.map(function (storyResponse) {
                                 return window.jiraUtils.getIssuesFromResponse(storyResponse);
+                            });
+                            stories.forEach(function (story, i) {
+                                epics[i].children.push(story);
                             });
                             deferred.resolve(stories);
                         });
                         return deferred.promise;
                     })
-                    .then(function (s) {
-                        console.log(epics, s);
+                    .then(function (stories) {
+                        var calls = [];
+                        var deferred = Q.defer();
+
+                        stories.forEach(function (story) {
+                            calls.push(window.jiraUtils.getSubtasks(story.key));
+                        });
+
+                        window.Q.all(calls).then(function (subtaskResponses) {
+                            var subtasks = subtaskResponses.map(function (subtaskResponse) {
+                                return window.jiraUtils.getIssuesFromResponse(subtaskResponse);
+                            });
+                            subtasks.forEach(function (subtask, i) {
+                                stories[i].children.push(subtask);
+                            });
+                            deferred.resolve(subtasks);
+                        });
+                        return deferred.promise;
+                    })
+                    .then(function (subtasks) {
+                        console.log(epics);
                     });
 
                 // window.jiraUtils.getEpics(config.project, config.version, config.team)
