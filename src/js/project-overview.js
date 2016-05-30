@@ -88,7 +88,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                                     subtaskResponses.forEach(function (subtaskResponse, storyIndex) {
                                         var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
                                         subtasks.forEach(function (subtask) {
-                                            epics[epicIndex].children[storyIndex].push(subtask);
+                                            epics[epicIndex].children[storyIndex].children.push(subtask);
                                         });
                                         console.log('data', epics);
                                     });
