@@ -6,7 +6,6 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
         template: function () {
             var templateReference = this;
             var $ = AJS.$;
-            var jiraUtils = window.jiraUtils;
 
             var config = {
                 project: 'SAM',
@@ -71,9 +70,9 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 drawChart(epicData);
 
 
-                $.when(jiraUtils.getEpics(config.project, config.version, config.team))
+                $.when(window.jiraUtils.getEpics(config.project, config.version, config.team))
                     .done(function (epicResponse) {
-                        var epics = jiraUtils.getIssuesFromResponse(epicResponse);
+                        var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
 
                         epics.forEach(function (epic, i) {
                             var id = 'overview_epic_' + i;
