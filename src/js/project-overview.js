@@ -15,20 +15,9 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
             init();
 
-            function appendEpic(id, epic) {
-                $('#overview_epics').append('<div id="' + id + '"><p><b>Epic: ' + epic.key + ' ' + epic.summary + ', SP: ' + epic.sp + ' Time spent: ' + epic.timeSpent + ', Total: ' + epic.aggregateTimeSpent + '</b></p></div>');
+            function setContent(string) {
+                $('#overview_epics').append('<div>' + string + '</div>');
             }
-
-            function appendStory(id, story) {
-                $('#' + id).append('<p>---------Story: ' + story.key + ' ' + story.summary + ', SP: ' + story.sp + ' Time spent: ' + story.timeSpent + ', Total: ' + story.aggregateTimeSpent + '</p>');
-            }
-
-            // function appendSubtask(id, subtask) {
-            //     var sp = subtask.fields.customfield_10263;
-            //     var timeSpent = subtask.fields.timespent;
-            //     var aggregatetimespent = subtask.fields.aggregatetimespent;
-            //     $('#' + id).append('<p>Subtask: ' + subtask.key + ' ' + subtask.fields.summary + ', SP: ' + sp + ' Time spent: ' + timeSpent + ', Total: ' + aggregatetimespent + '</p>');
-            // }
 
             function drawChart(epicData) {
                 google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -102,46 +91,14 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                             subtasks.forEach(function (subtask, i) {
                                 stories[i].children = subtask;
                             });
-                            deferred.resolve(subtasks);
+                            deferred.resolve([].concat.apply([], subtasks));
                         });
                         return deferred.promise;
                     })
                     .then(function (subtasks) {
+                        setContent(JSON.stringify(epics));
                         console.log(epics);
                     });
-
-                // window.jiraUtils.getEpics(config.project, config.version, config.team)
-                //     .then(function (epicResponse) {
-                //         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
-                //
-                //         epics.forEach(function (epic) {
-                //             // var epicElementId = 'overview_epic_' + i;
-                //             // appendEpic(epicElementId, epic);
-                //             pendingCalls.push(window.jiraUtils.getStories(epic.key));
-                //         });
-                //
-                //         window.Q.all(pendingCalls).done(function (storyResponses) {
-                //             storyResponses.forEach(function (storyResponse, epicIndex) {
-                //
-                //                 var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
-                //                 pendingCalls = [];
-                //                 stories.forEach(function (story) {
-                //                     epics[epicIndex].children.push(story);
-                //                     pendingCalls.push(window.jiraUtils.getSubtasks(story.key));
-                //                 });
-                //             });
-                //
-                //             window.Q.all(pendingCalls).done(function (subtaskResponses) {
-                //                 subtaskResponses.forEach(function (subtaskResponse, storyIndex) {
-                //                     var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
-                //                     subtasks.forEach(function (subtask) {
-                //                         epics[epicIndex].children[storyIndex].children.push(subtask);
-                //                     });
-                //                 });
-                //                 console.log('data', epics);
-                //             });
-                //         });
-                //     });
             }
         }
     }
