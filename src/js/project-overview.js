@@ -6,13 +6,14 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
         template: function () {
             var templateReference = this;
             var $ = AJS.$;
+            var jiraUtils = window.jiraUtils;
 
             var config = {
                 project: 'SAM',
                 team: 'Catta',
                 version: '2016.05 C'
             };
-            
+
             init();
 
             function appendEpic(id, epic) {

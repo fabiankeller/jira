@@ -1,6 +1,5 @@
-var jiraUtils = undefined;
 (function () {
-    jiraUtils = {
+    window.jiraUtils = {
         jqlQuery: jqlQuery,
         getEpics: getEpics,
         getStories: getStories,
