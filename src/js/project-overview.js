@@ -67,27 +67,20 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 window.jiraUtils.getEpics(config.project, config.version, config.team)
                     .then(function (epicResponse) {
                         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
-
+                        var storyCalls = [];
                         epics.forEach(function (epic, i) {
                             var epicElementId = 'overview_epic_' + i;
-
                             appendEpic(epicElementId, epic);
-
-                            window.jiraUtils.getStories(epic.key)
-                                .then(function (storyResponse) {
-                                    var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
-                                    stories.forEach(function (story) {
-                                        appendStory(epicElementId, story);
-
-                                        // $.when(window.jiraUtils.getSubtasks(story.key))
-                                        //     .done(function (subtaskResponse) {
-                                        //         var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
-                                        //         subtasks.forEach(function (subtask) {
-                                        //             appendStory(epicElementId, subtask);
-                                        //         });
-                                        //     });
-                                    });
+                            storyCalls.push(window.jiraUtils.getStories(epic.key));
+                        });
+                        
+                        window.Q.all(storyCalls).done(function (storyResponses) {
+                            storyResponses.forEach(function (storyResponse, i) {
+                                var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
+                                stories.forEach(function (story) {
+                                    appendStory('overview_epic_' + i, story);
                                 });
+                            });
                         });
                     });
             }
