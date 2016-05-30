@@ -1,4 +1,6 @@
 (function () {
+    var $ = AJS.$;
+
     window.jiraUtils = {
         jqlQuery: jqlQuery,
         getEpics: getEpics,
