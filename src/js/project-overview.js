@@ -33,11 +33,15 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             //     $('#' + id).append('<p>Subtask: ' + subtask.key + ' ' + subtask.fields.summary + ', SP: ' + sp + ' Time spent: ' + timeSpent + ', Total: ' + aggregatetimespent + '</p>');
             // }
 
-            function drawChart(epicData) {
+            function drawChart() {
                 google.charts.load('current', {packages: ['corechart', 'bar']});
                 google.charts.setOnLoadCallback(drawBarColors);
 
                 function drawBarColors() {
+                    var epicData = [
+                        ['a', 100, 10],
+                        ['b', 200, 10]
+                    ];
                     var temp = [['Epic', 'PD Total', 'PD Done']];
                     epicData.forEach(function (entry) {
                         temp.push(entry);
@@ -61,19 +65,15 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 }
             }
 
-            var epicData = [
-                ['a', 100, 10],
-                ['b', 200, 10]
-            ];
+
 
             function init() {
-                drawChart(epicData);
-
+                drawChart();
 
                 $.when(window.jiraUtils.getEpics(config.project, config.version, config.team))
                     .done(function (epicResponse) {
                         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
-
+                        debugger;
                         epics.forEach(function (epic, i) {
                             var id = 'overview_epic_' + i;
 
