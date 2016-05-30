@@ -69,16 +69,29 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
                         var storyCalls = [];
                         epics.forEach(function (epic, i) {
-                            var epicElementId = 'overview_epic_' + i;
-                            appendEpic(epicElementId, epic);
+                            // var epicElementId = 'overview_epic_' + i;
+                            // appendEpic(epicElementId, epic);
                             storyCalls.push(window.jiraUtils.getStories(epic.key));
                         });
-                        
+
                         window.Q.all(storyCalls).done(function (storyResponses) {
-                            storyResponses.forEach(function (storyResponse, i) {
+                            storyResponses.forEach(function (storyResponse, epicIndex) {
+
                                 var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
+                                var subtaskCalls = [];
                                 stories.forEach(function (story) {
-                                    appendStory('overview_epic_' + i, story);
+                                    epics[epicIndex].children.push(story);
+                                    subtaskCalls.push(window.jiraUtils.getSubtasks(story.key));
+                                });
+
+                                window.Q.all(subtaskCalls).done(function (subtaskResponses) {
+                                    subtaskResponses.forEach(function (subtaskResponse, storyIndex) {
+                                        var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
+                                        subtasks.forEach(function (subtask) {
+                                            epics[epicIndex].children[storyIndex].push(subtask);
+                                        });
+                                        console.log('data', epics);
+                                    });
                                 });
                             });
                         });
