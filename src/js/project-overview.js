@@ -72,8 +72,8 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
                 $.when(window.jiraUtils.getEpics(config.project, config.version, config.team))
                     .done(function (epicResponse) {
-                        var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
                         debugger;
+                        var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
                         epics.forEach(function (epic, i) {
                             var id = 'overview_epic_' + i;
 
