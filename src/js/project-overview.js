@@ -64,38 +64,63 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     ['b', 200, 10]
                 ]);
 
+
+                var epics = [];
+                var stories = [];
                 window.jiraUtils.getEpics(config.project, config.version, config.team)
                     .then(function (epicResponse) {
-                        var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
-                        var storyCalls = [];
-                        epics.forEach(function (epic, i) {
-                            // var epicElementId = 'overview_epic_' + i;
-                            // appendEpic(epicElementId, epic);
-                            storyCalls.push(window.jiraUtils.getStories(epic.key));
+                        epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
+                        var calls = [];
+                        var deferred = Q.defer();
+
+                        epics.forEach(function (epic) {
+                            calls.push(window.jiraUtils.getStories(epic.key));
                         });
 
-                        window.Q.all(storyCalls).done(function (storyResponses) {
-                            storyResponses.forEach(function (storyResponse, epicIndex) {
-
-                                var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
-                                var subtaskCalls = [];
-                                stories.forEach(function (story) {
-                                    epics[epicIndex].children.push(story);
-                                    subtaskCalls.push(window.jiraUtils.getSubtasks(story.key));
-                                });
-
-                                window.Q.all(subtaskCalls).done(function (subtaskResponses) {
-                                    subtaskResponses.forEach(function (subtaskResponse, storyIndex) {
-                                        var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
-                                        subtasks.forEach(function (subtask) {
-                                            epics[epicIndex].children[storyIndex].children.push(subtask);
-                                        });
-                                        console.log('data', epics);
-                                    });
-                                });
+                        window.Q.all(calls).then(function (storyResponses) {
+                            stories = storyResponses.map(function (storyResponse) {
+                                return window.jiraUtils.getIssuesFromResponse(storyResponse);
                             });
+                            return stories;
                         });
+                        return deferred.promise;
+                    })
+                    .then(function (s) {
+                        console.log(epics, s);
                     });
+
+                // window.jiraUtils.getEpics(config.project, config.version, config.team)
+                //     .then(function (epicResponse) {
+                //         var epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
+                //
+                //         epics.forEach(function (epic) {
+                //             // var epicElementId = 'overview_epic_' + i;
+                //             // appendEpic(epicElementId, epic);
+                //             pendingCalls.push(window.jiraUtils.getStories(epic.key));
+                //         });
+                //
+                //         window.Q.all(pendingCalls).done(function (storyResponses) {
+                //             storyResponses.forEach(function (storyResponse, epicIndex) {
+                //
+                //                 var stories = window.jiraUtils.getIssuesFromResponse(storyResponse);
+                //                 pendingCalls = [];
+                //                 stories.forEach(function (story) {
+                //                     epics[epicIndex].children.push(story);
+                //                     pendingCalls.push(window.jiraUtils.getSubtasks(story.key));
+                //                 });
+                //             });
+                //
+                //             window.Q.all(pendingCalls).done(function (subtaskResponses) {
+                //                 subtaskResponses.forEach(function (subtaskResponse, storyIndex) {
+                //                     var subtasks = window.jiraUtils.getIssuesFromResponse(subtaskResponse);
+                //                     subtasks.forEach(function (subtask) {
+                //                         epics[epicIndex].children[storyIndex].children.push(subtask);
+                //                     });
+                //                 });
+                //                 console.log('data', epics);
+                //             });
+                //         });
+                //     });
             }
         }
     }
