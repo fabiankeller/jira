@@ -81,9 +81,9 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                                 return window.jiraUtils.getIssuesFromResponse(storyResponse);
                             });
                             stories.forEach(function (story, i) {
-                                epics[i].children.push(story);
+                                epics[i].children = story;
                             });
-                            deferred.resolve(stories);
+                            deferred.resolve([].concat.apply([], stories));
                         });
                         return deferred.promise;
                     })
@@ -100,7 +100,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                                 return window.jiraUtils.getIssuesFromResponse(subtaskResponse);
                             });
                             subtasks.forEach(function (subtask, i) {
-                                stories[i].children.push(subtask);
+                                stories[i].children = subtask;
                             });
                             deferred.resolve(subtasks);
                         });
