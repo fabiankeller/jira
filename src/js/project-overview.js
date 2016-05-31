@@ -23,6 +23,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 google.charts.setOnLoadCallback(drawBarColors);
 
                 function drawBarColors() {
+                    debugger;
                     var temp = [['Epic', 'PD Total', 'PD Done']];
                     epicData.forEach(function (entry) {
                         temp.push(entry);
@@ -32,7 +33,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     var options = {
                         title: 'Catta Projects for 2016.05 C',
                         chartArea: {width: '80%'},
-                        height: (data.getNumberOfRows() + 1) * 30,
+                        height: (data.getNumberOfRows() + 1) * 50,
                         colors: ['#999999', '#11aa22'],
                         hAxis: {
                             title: 'Progress',
