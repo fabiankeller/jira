@@ -43,6 +43,8 @@
                 sp: issue.fields.customfield_10263,
                 timeSpent: issue.fields.timespent,
                 aggregateTimeSpent: issue.fields.aggregatetimespent,
+                statusId: issue.fields.status.id,
+                statusName: issue.fields.status.name,
                 children: []
             });
         });
