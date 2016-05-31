@@ -31,7 +31,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
                     var options = {
                         title: 'Catta Projects for 2016.05 C',
-                        chartArea: {width: '80%'},
+                        chartArea: {width: '80%', height: data.getNumberOfRows() * 15},
                         colors: ['#999999', '#11aa22'],
                         hAxis: {
                             title: 'Progress',
@@ -50,7 +50,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
             function init() {
                 google.charts.load('current', {packages: ['corechart', 'bar']});
-                
+
                 $("#generateChartButton").click(function () {
                         var epics = JSON.parse($('#epicsJson').val());
                         epics = window.processData(epics);
