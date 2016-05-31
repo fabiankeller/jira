@@ -44,6 +44,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     };
                     var chart = new google.visualization.BarChart(document.getElementById('overview_epics_chart'));
                     chart.draw(data, options);
+                    projectOverviewGadget.resize();
                 }
             }
 
