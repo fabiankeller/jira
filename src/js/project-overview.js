@@ -47,16 +47,22 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 }
             }
 
-            function init() {
-                drawChart([
-                    ['a', 100, 10],
-                    ['b', 200, 10]
-                ]);
 
-                getDataAsJson()
-                    .then(function (json) {
-                        setContent(json);
-                    });
+
+            function init() {
+                $("#generateChartButton").click( function()
+                    {
+                        drawChart([
+                            ['a', 100, 10],
+                            ['b', 200, 10]
+                        ]);
+                    }
+                );
+
+                // getDataAsJson()
+                //     .then(function (json) {
+                //         setContent(json);
+                //     });
             }
 
             function getDataAsJson() {
