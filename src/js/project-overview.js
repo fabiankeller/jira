@@ -53,52 +53,56 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     ['b', 200, 10]
                 ]);
 
+                getDataAsJson()
+                    .then(function (json) {
+                        setContent(json);
+                    });
+            }
+
+            function getDataAsJson() {
+                var deferred = Q.defer();
 
                 var epics = [];
                 window.jiraUtils.getEpics(config.project, config.version, config.team)
                     .then(function (epicResponse) {
                         epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
-                        var calls = [];
-                        var deferred = Q.defer();
-
-                        epics.forEach(function (epic) {
-                            calls.push(window.jiraUtils.getStories(epic.key));
-                        });
-
-                        window.Q.all(calls).then(function (storyResponses) {
-                            var stories = storyResponses.map(function (storyResponse) {
-                                return window.jiraUtils.getIssuesFromResponse(storyResponse);
-                            });
-                            stories.forEach(function (story, i) {
-                                epics[i].children = story;
-                            });
-                            deferred.resolve([].concat.apply([], stories));
-                        });
-                        return deferred.promise;
+                        return epics;
                     })
-                    .then(function (stories) {
-                        var calls = [];
-                        var deferred = Q.defer();
-
-                        stories.forEach(function (story) {
-                            calls.push(window.jiraUtils.getSubtasks(story.key));
-                        });
-
-                        window.Q.all(calls).then(function (subtaskResponses) {
-                            var subtasks = subtaskResponses.map(function (subtaskResponse) {
-                                return window.jiraUtils.getIssuesFromResponse(subtaskResponse);
-                            });
-                            subtasks.forEach(function (subtask, i) {
-                                stories[i].children = subtask;
-                            });
-                            deferred.resolve([].concat.apply([], subtasks));
-                        });
-                        return deferred.promise;
+                    .then(function(epics){
+                        return getChildren(epics, window.jiraUtils.getStories);
+                    })
+                    .then(function(stories){
+                        return getChildren(stories, window.jiraUtils.getSubtasks);
                     })
                     .then(function (subtasks) {
-                        setContent(JSON.stringify(epics));
-                        console.log(epics);
+                        deferred.resolve(JSON.stringify(epics));
                     });
+
+                function getChildren(parentIssues, getter) {
+                    var calls = [];
+                    var deferred = Q.defer();
+
+                    parentIssues.forEach(function (epic) {
+                        calls.push(getter(epic.key));
+                    });
+
+                    window.Q.all(calls).then(function (storyResponses) {
+                        var childrenPerParent = storyResponses.map(function (storyResponse) {
+                            return window.jiraUtils.getIssuesFromResponse(storyResponse);
+                        });
+                        childrenPerParent.forEach(function (children, i) {
+                            parentIssues[i].children = children;
+                        });
+                        deferred.resolve(flatten(childrenPerParent));
+                    });
+                    return deferred.promise;
+                }
+
+                function flatten(array) {
+                    return [].concat.apply([], array);
+                }
+
+                return deferred.promise;
             }
         }
     }
