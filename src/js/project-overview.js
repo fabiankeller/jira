@@ -52,7 +52,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 google.charts.load('current', {packages: ['corechart', 'bar']});
                 
                 $("#generateChartButton").click(function () {
-                        var epics = JSON.parse($('#epicsJson').text());
+                        var epics = JSON.parse($('#epicsJson').val());
                         epics = window.processData(epics);
                         drawChart(epics);
                     }
