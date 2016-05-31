@@ -20,7 +20,6 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             }
 
             function drawChart(epicData) {
-                google.charts.load('current', {packages: ['corechart', 'bar']});
                 google.charts.setOnLoadCallback(drawBarColors);
 
                 function drawBarColors() {
@@ -49,14 +48,13 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             }
 
 
-
             function init() {
-                $("#generateChartButton").click( function()
-                    {
-                        drawChart([
-                            ['a', 100, 10],
-                            ['b', 200, 10]
-                        ]);
+                google.charts.load('current', {packages: ['corechart', 'bar']});
+                
+                $("#generateChartButton").click(function () {
+                        var epics = JSON.parse($('#epicsJson').text());
+                        epics = window.processData(epics);
+                        drawChart(epics);
                     }
                 );
 
@@ -64,6 +62,13 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 //     .then(function (json) {
                 //         setContent(json);
                 //     });
+            }
+
+            function processData() {
+                return [
+                    ['a', 100, 10],
+                    ['b', 200, 10]
+                ];
             }
 
             function getDataAsJson() {
@@ -75,10 +80,10 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                         epics = window.jiraUtils.getIssuesFromResponse(epicResponse);
                         return epics;
                     })
-                    .then(function(epics){
+                    .then(function (epics) {
                         return getChildren(epics, window.jiraUtils.getStories);
                     })
-                    .then(function(stories){
+                    .then(function (stories) {
                         return getChildren(stories, window.jiraUtils.getSubtasks);
                     })
                     .then(function (subtasks) {
