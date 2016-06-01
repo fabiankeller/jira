@@ -23,7 +23,6 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 google.charts.setOnLoadCallback(drawBarColors);
 
                 function drawBarColors() {
-                    debugger;
                     var temp = [['Epic', 'PD Total', 'PD Done']];
                     epicData.forEach(function (entry) {
                         temp.push(entry);
@@ -55,6 +54,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
                 $("#generateChartButton").click(function () {
                         var epics = JSON.parse($('#epicsJson').val());
+                        $('#epicsJson').val('');
                         epics = window.processData(epics);
                         drawChart(epics);
                     }
@@ -64,13 +64,6 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 //     .then(function (json) {
                 //         setContent(json);
                 //     });
-            }
-
-            function processData() {
-                return [
-                    ['a', 100, 10],
-                    ['b', 200, 10]
-                ];
             }
 
             function getDataAsJson() {
