@@ -50,13 +50,15 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 $("#generateChartButton").click(function () {
                         var epics = JSON.parse($('#epicsJson').val());
                         var ignoreEmpty = $('#ignoreEmptyEpicsCheckbox').prop('checked');
+                        $('#epicsJson').val('');
+
                         epics = window.processData(epics, ignoreEmpty);
                         drawChart(epics);
                     }
                 );
 
                 $("#loadDataButton").click(function () {
-                    $('#epicsJson').val('LOADING...');
+                        $('#epicsJson').val('LOADING...');
                         getDataAsJson()
                             .then(function (json) {
                                 $('#epicsJson').val(json);
