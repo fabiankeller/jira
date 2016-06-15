@@ -10,7 +10,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             var config = {
                 project: 'SAM',
                 team: 'Catta',
-                version: '2016.11 C'
+                version: $('#releaseVersionInputText').val()
             };
 
             init();
