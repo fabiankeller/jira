@@ -14,7 +14,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             };
 
             init();
-            
+
             function drawChart(epicData) {
                 google.charts.setOnLoadCallback(drawBarColors);
 
@@ -26,7 +26,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     var data = google.visualization.arrayToDataTable(temp);
 
                     var options = {
-                        title: 'Catta Projects for 2016.05 C',
+                        title: config.team + ' projects for ' + config.version,
                         chartArea: {width: '60%'},
                         height: (data.getNumberOfRows() + 1) * 50,
                         colors: ['#999999', '#1122aa', '#11aa22'],
@@ -43,7 +43,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     projectOverviewGadget.resize();
                 }
             }
-            
+
             function init() {
                 google.charts.load('current', {packages: ['corechart', 'bar']});
 
