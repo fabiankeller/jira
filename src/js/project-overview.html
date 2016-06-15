@@ -1,0 +1,43 @@
+<script>
+    window.processData = function (epics) {
+        console.log('data in', epics);
+        var retval = [];
+
+
+        epics.forEach(function (epic) {
+            var storyPointSum = 0;
+            var percentage = 0;
+            var timeSpent = 0;
+            epic.children.forEach(function (story) {
+                if (story.sp) {
+                    storyPointSum += story.sp;
+                }
+                if (story.aggregateTimeSpent) {
+                    timeSpent += story.aggregateTimeSpent;
+                }
+            });
+            if (epic.aggregateTimeSpent) {
+                timeSpent += epic.aggregateTimeSpent;
+            }
+            if (storyPointSum === 0) {
+                percentage = 0;
+            } else {
+
+            }
+            retval.push([epic.summary, storyPointSum, percentage, timeSpent / 3600 / 8.4]);
+        });
+        console.log("epics", retval.length, retval);
+        return retval;
+    };
+</script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://raw.githack.com/brookman/jira/6b3be6ef4eea6652ead3db5f6e5a617291b3469d/src/js/jira-utils.js"></script>
+<script src="https://rawgit.com/brookman/jira/6b3be6ef4eea6652ead3db5f6e5a617291b3469d/src/js/project-overview.js"></script>
+<div><textarea id="epicsJson">
+[]
+</textarea>
+    <button id="generateChartButton">Generate chart</button>
+</div>
+<div id="overview_epics_chart"></div>
+<div id="overview_epics"></div>
