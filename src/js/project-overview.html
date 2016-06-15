@@ -3,7 +3,6 @@
         console.log('data in', epics);
         var retval = [];
 
-        var epicWeight = 4;
         var storyWeight = 2;
         var subtaskWeight = 1;
 
@@ -14,11 +13,6 @@
             var timeSpent = 0;
             var percentage = 0;
 
-            tasksTotal += epicWeight;
-            if (epic.statusName === 'Closed') {
-                tasksDone += epicWeight;
-            }
-
             epic.children.forEach(function (story) {
                 if (story.sp) {
                     storyPointSum += story.sp;
@@ -28,14 +22,14 @@
                 }
 
                 tasksTotal += storyWeight;
-                if (epic.statusName === 'Closed' || story.statusName === 'Closed') {
+                if (epic.closed || story.closed) {
                     tasksDone += storyWeight;
                 }
 
                 if (story.children) {
                     story.children.forEach(function (subtask) {
                         tasksTotal += subtaskWeight;
-                        if (epic.statusName === 'Closed' || story.statusName === 'Closed' || subtask.statusName === 'Closed') {
+                        if (epic.closed || story.closed || subtask.closed) {
                             tasksDone += subtaskWeight;
                         }
                     });
@@ -49,10 +43,10 @@
             } else {
                 percentage = tasksDone / tasksTotal;
             }
-            if (ignoreEmpty && storyPointSum === 0) {
-                return;
+
+            if (!(ignoreEmpty && storyPointSum === 0)) {
+                retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
             }
-            retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
         });
         console.log("epics", retval.length, retval);
         return retval;
@@ -60,8 +54,8 @@
 </script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="https://raw.githack.com/brookman/jira/39bc7ab27dbbfecb0f688095f12d74febaccb8f5/src/js/jira-utils.js"></script>
-<script src="https://rawgit.com/brookman/jira/39bc7ab27dbbfecb0f688095f12d74febaccb8f5/src/js/project-overview.js"></script>
+<script src="https://raw.githack.com/brookman/jira/2b834eb1c6ba21d0b699962c43c5c8430e799dc9/src/js/jira-utils.js"></script>
+<script src="https://rawgit.com/brookman/jira/2b834eb1c6ba21d0b699962c43c5c8430e799dc9/src/js/project-overview.js"></script>
 <div><textarea id="epicsJson">
 []
 </textarea>
