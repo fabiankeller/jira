@@ -10,15 +10,11 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             var config = {
                 project: 'SAM',
                 team: 'Catta',
-                version: '2016.05 C'
+                version: '2016.11 C'
             };
 
             init();
-
-            function setContent(string) {
-                $('#overview_epics').append('<div>' + string + '</div>');
-            }
-
+            
             function drawChart(epicData) {
                 google.charts.setOnLoadCallback(drawBarColors);
 
@@ -47,8 +43,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     projectOverviewGadget.resize();
                 }
             }
-
-
+            
             function init() {
                 google.charts.load('current', {packages: ['corechart', 'bar']});
 
@@ -60,10 +55,10 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                     }
                 );
 
-                // getDataAsJson()
-                //     .then(function (json) {
-                //         setContent(json);
-                //     });
+                getDataAsJson()
+                    .then(function (json) {
+                        $('#epicsJson').val(json);
+                    });
             }
 
             function getDataAsJson() {
