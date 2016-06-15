@@ -49,16 +49,22 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
 
                 $("#generateChartButton").click(function () {
                         var epics = JSON.parse($('#epicsJson').val());
-                        $('#epicsJson').val('');
-                        epics = window.processData(epics);
+                        var ignoreEmpty = $('#ignoreEmptyEpicsCheckbox').prop('checked');
+                        epics = window.processData(epics, ignoreEmpty);
+
+                    $("#loadDataButton").
                         drawChart(epics);
                     }
                 );
 
-                getDataAsJson()
-                    .then(function (json) {
-                        $('#epicsJson').val(json);
-                    });
+                $("#loadDataButton").click(function () {
+                    $('#epicsJson').val('LOADING...');
+                        getDataAsJson()
+                            .then(function (json) {
+                                $('#epicsJson').val(json);
+                            });
+                    }
+                );
             }
 
             function getDataAsJson() {
