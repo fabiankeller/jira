@@ -51,8 +51,6 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                         var epics = JSON.parse($('#epicsJson').val());
                         var ignoreEmpty = $('#ignoreEmptyEpicsCheckbox').prop('checked');
                         epics = window.processData(epics, ignoreEmpty);
-
-                    $("#loadDataButton").
                         drawChart(epics);
                     }
                 );
