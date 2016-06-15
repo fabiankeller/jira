@@ -10,7 +10,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             var config = {
                 project: 'SAM',
                 team: 'Catta',
-                version: $('#releaseVersionInputText').val()
+                version: ''
             };
 
             init();
@@ -58,6 +58,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 );
 
                 $("#loadDataButton").click(function () {
+                        config.version = $('#releaseVersionInputText').val();
                         $('#epicsJson').val('LOADING...');
                         getDataAsJson()
                             .then(function (json) {

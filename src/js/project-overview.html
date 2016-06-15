@@ -49,7 +49,7 @@
             } else {
                 percentage = tasksDone / tasksTotal;
             }
-            if(ignoreEmpty && storyPointSum === 0){
+            if (ignoreEmpty && storyPointSum === 0) {
                 return;
             }
             retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
@@ -60,13 +60,14 @@
 </script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="https://raw.githack.com/brookman/jira/6b8abd792a31632cfd9bc4fdc9cfb3269d25d411/src/js/jira-utils.js"></script>
-<script src="https://rawgit.com/brookman/jira/6b8abd792a31632cfd9bc4fdc9cfb3269d25d411/src/js/project-overview.js"></script>
+<script src="https://raw.githack.com/brookman/jira/39bc7ab27dbbfecb0f688095f12d74febaccb8f5/src/js/jira-utils.js"></script>
+<script src="https://rawgit.com/brookman/jira/39bc7ab27dbbfecb0f688095f12d74febaccb8f5/src/js/project-overview.js"></script>
 <div><textarea id="epicsJson">
 []
 </textarea>
-    <input id="releaseVersionInputText" type="text">2016.11 C</input>
+    <input id="releaseVersionInputText" type="text" value="2016.11 C"/>
     <button id="loadDataButton">Load data from JIRA</button>
+    <br/>
     <input id="ignoreEmptyEpicsCheckbox" type="checkbox">Ignore epics without story points</input>
     <button id="generateChartButton">Generate chart</button>
 </div>
