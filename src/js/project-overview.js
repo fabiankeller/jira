@@ -23,7 +23,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                 google.charts.setOnLoadCallback(drawBarColors);
 
                 function drawBarColors() {
-                    var temp = [['Epic', 'Story Points', 'Time spent', 'Percentage', 'Time spent']];
+                    var temp = [['Epic', 'Story Points', 'Percentage', 'Time spent']];
                     epicData.forEach(function (entry) {
                         temp.push(entry);
                     });
