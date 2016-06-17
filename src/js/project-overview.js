@@ -52,7 +52,7 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                         var ignoreEmpty = $('#ignoreEmptyEpicsCheckbox').prop('checked');
                         $('#epicsJson').val('');
 
-                        epics = window.processData(epics, ignoreEmpty);
+                        epics = processData(epics, ignoreEmpty);
                         drawChart(epics);
                     }
                 );
@@ -66,6 +66,58 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
                             });
                     }
                 );
+            }
+
+            function processData(epics, ignoreEmpty) {
+                var retval = [];
+
+                var storyWeight = 2;
+                var subtaskWeight = 1;
+
+                epics.forEach(function (epic) {
+                    var storyPointSum = 0;
+                    var tasksTotal = 0;
+                    var tasksDone = 0;
+                    var timeSpent = 0;
+                    var percentage = 0;
+
+                    epic.children.forEach(function (story) {
+                        if (story.sp) {
+                            storyPointSum += story.sp;
+                        }
+                        if (story.aggregateTimeSpent) {
+                            timeSpent += story.aggregateTimeSpent;
+                        }
+
+                        tasksTotal += storyWeight;
+                        if (epic.closed || story.closed) {
+                            tasksDone += storyWeight;
+                        }
+
+                        if (story.children) {
+                            story.children.forEach(function (subtask) {
+                                tasksTotal += subtaskWeight;
+                                if (epic.closed || story.closed || subtask.closed) {
+                                    tasksDone += subtaskWeight;
+                                }
+                            });
+                        }
+                    });
+                    if (epic.aggregateTimeSpent) {
+                        timeSpent += epic.aggregateTimeSpent;
+                    }
+                    if (storyPointSum === 0) {
+                        percentage = 0;
+                    } else {
+                        percentage = tasksDone / tasksTotal;
+                    }
+
+                    if (!(ignoreEmpty && storyPointSum === 0)) {
+                        retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
+                    }
+                });
+                console.log("epics", retval.length, retval);
+                return retval;
             }
 
             function getDataAsJson() {
