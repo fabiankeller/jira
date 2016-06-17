@@ -45,6 +45,11 @@ projectOverviewGadget || (projectOverviewGadget = AJS.Gadget({
             }
 
             function init() {
+                if (window.projectOverviewGadgetInitialized) {
+                    return;
+                }
+                window.projectOverviewGadgetInitialized = true;
+
                 google.charts.load('current', {packages: ['corechart', 'bar']});
 
                 $("#generateChartButton").click(function () {
