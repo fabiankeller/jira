@@ -1,69 +1,37 @@
-<script>
-    window.processData = function (epics, ignoreEmpty) {
-        console.log('data in', epics);
-        var retval = [];
-
-        var storyWeight = 2;
-        var subtaskWeight = 1;
-
-        epics.forEach(function (epic) {
-            var storyPointSum = 0;
-            var tasksTotal = 0;
-            var tasksDone = 0;
-            var timeSpent = 0;
-            var percentage = 0;
-
-            epic.children.forEach(function (story) {
-                if (story.sp) {
-                    storyPointSum += story.sp;
-                }
-                if (story.aggregateTimeSpent) {
-                    timeSpent += story.aggregateTimeSpent;
-                }
-
-                tasksTotal += storyWeight;
-                if (epic.closed || story.closed) {
-                    tasksDone += storyWeight;
-                }
-
-                if (story.children) {
-                    story.children.forEach(function (subtask) {
-                        tasksTotal += subtaskWeight;
-                        if (epic.closed || story.closed || subtask.closed) {
-                            tasksDone += subtaskWeight;
-                        }
-                    });
-                }
-            });
-            if (epic.aggregateTimeSpent) {
-                timeSpent += epic.aggregateTimeSpent;
-            }
-            if (storyPointSum === 0) {
-                percentage = 0;
-            } else {
-                percentage = tasksDone / tasksTotal;
-            }
-
-            if (!(ignoreEmpty && storyPointSum === 0)) {
-                retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
-            }
-        });
-        console.log("epics", retval.length, retval);
-        return retval;
-    };
-</script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="https://raw.githack.com/brookman/jira/2b834eb1c6ba21d0b699962c43c5c8430e799dc9/src/js/jira-utils.js"></script>
-<script src="https://rawgit.com/brookman/jira/2b834eb1c6ba21d0b699962c43c5c8430e799dc9/src/js/project-overview.js"></script>
-<div><textarea id="epicsJson">
-[]
-</textarea>
-    <input id="releaseVersionInputText" type="text" value="2016.11 C"/>
-    <button id="loadDataButton">Load data from JIRA</button>
-    <br/>
-    <input id="ignoreEmptyEpicsCheckbox" type="checkbox">Ignore epics without story points</input>
-    <button id="generateChartButton">Generate chart</button>
+<script src="https://rawgit.com/brookman/jira/master/src/js/jira-utils.js"></script>
+<script src="https://rawgit.com/brookman/jira/master/src/js/project-overview.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!--<form>-->
+                <div class="form-group">
+                    <label for="releaseVersionInputText">Release name</label>
+                    <input type="text" class="form-control" id="releaseVersionInputText" value="2016.11 C" placeholder="Release">
+                </div>
+                <div class="form-group">
+                    <button id="loadDataButton" class="btn btn-default">Get data from JIRA</button>
+                </div>
+                <div class="form-group">
+                    <label for="epicsJson">Json</label>
+                    <textarea class="form-control" rows="6" id="epicsJson">[]</textarea>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input id="ignoreEmptyEpicsCheckbox" type="checkbox" value="">Ignore epics without story points</label>
+                    </div>
+                </div>
+                <button id="generateChartButton" class="btn btn-default">Generate chart</button>
+            <!--</form>-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="overview_epics_chart"></div>
+        </div>
+    </div>
 </div>
-<div id="overview_epics_chart"></div>
-<div id="overview_epics"></div>
