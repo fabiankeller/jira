@@ -31,7 +31,7 @@
     }
 
     function getIssuesFromResponse(jiraResponse) {
-        var issuesRaw = JSON.parse(jiraResponse.responseText).issues;
+        var issuesRaw = jiraResponse.issues;
         var issueProcessed = [];
         issuesRaw.forEach(function (issue, i) {
             issueProcessed.push({
