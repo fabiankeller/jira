@@ -111,6 +111,9 @@
                 timeSpent += epic.aggregateTimeSpent;
             }
             if (storyPointSum === 0) {
+                if(ignoreEmpty){
+                    return;
+                }
                 percentage = 0;
             } else {
                 percentage = storyPointsDone / storyPointSum;
