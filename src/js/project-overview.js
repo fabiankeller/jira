@@ -1,5 +1,5 @@
 (function () {
-    
+
     var config = {
         project: 'SAM',
         team: 'Catta',
@@ -80,6 +80,10 @@
             var percentage = 0;
 
             epic.children.forEach(function (story) {
+                console.log('type:', story.type);
+                if (story.type !== 'Story') { // filter out Tasks
+                    return;
+                }
                 if (story.sp) {
                     storyPointSum += story.sp;
                 }

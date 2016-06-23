@@ -37,6 +37,7 @@
             issueProcessed.push({
                 index: i,
                 key: issue.key,
+                type: issue.fields.issuetype.name,
                 summary: issue.fields.summary,
                 sp: issue.fields.customfield_10263,
                 timeSpent: issue.fields.timespent,
