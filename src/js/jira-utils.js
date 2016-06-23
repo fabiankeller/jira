@@ -40,6 +40,7 @@
                 type: issue.fields.issuetype.name,
                 summary: issue.fields.summary,
                 sp: issue.fields.customfield_10263,
+                originalEstimate: issue.fields.timeoriginalestimate,
                 timeSpent: issue.fields.timespent,
                 aggregateTimeSpent: issue.fields.aggregatetimespent,
                 statusName: issue.fields.status.name,
