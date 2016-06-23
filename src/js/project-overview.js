@@ -69,49 +69,49 @@
     function processData(epics, ignoreEmpty) {
         var retval = [];
 
-        var storyWeight = 2;
-        var subtaskWeight = 1;
-
         epics.forEach(function (epic) {
             var storyPointSum = 0;
-            var tasksTotal = 0;
-            var tasksDone = 0;
+            var storyPointsDone = 0;
             var timeSpent = 0;
-            var percentage = 0;
 
             epic.children.forEach(function (story) {
-                console.log('type:', story.type);
-                if (story.type !== 'Story') { // filter out Tasks
+                if (story.type !== 'Story') { // filter out non-Stories (Tasks)
                     return;
                 }
+                if (ignoreEmpty && !story.sp) {
+                    return;
+                }
+
+                var sp = 0;
                 if (story.sp) {
-                    storyPointSum += story.sp;
+                    sp = story.sp;
+                    storyPointSum = sp;
                 }
                 if (story.aggregateTimeSpent) {
                     timeSpent += story.aggregateTimeSpent;
                 }
 
-                tasksTotal += storyWeight;
                 if (epic.closed || story.closed) {
-                    tasksDone += storyWeight;
-                }
-
-                if (story.children) {
+                    storyPointsDone += sp;
+                } else if (story.children) {
+                    var numberOfSubtasks = story.children.length;
+                    var numberOfSubtasksDone = 0;
                     story.children.forEach(function (subtask) {
-                        tasksTotal += subtaskWeight;
-                        if (epic.closed || story.closed || subtask.closed) {
-                            tasksDone += subtaskWeight;
+                        if (subtask.closed) {
+                            numberOfSubtasksDone++;
                         }
                     });
+                    storyPointsDone += (numberOfSubtasksDone / numberOfSubtasks) * sp;
                 }
             });
+            
             if (epic.aggregateTimeSpent) {
                 timeSpent += epic.aggregateTimeSpent;
             }
             if (storyPointSum === 0) {
                 percentage = 0;
             } else {
-                percentage = tasksDone / tasksTotal;
+                percentage = storyPointsDone / storyPointSum;
             }
 
             if (!(ignoreEmpty && storyPointSum === 0)) {
