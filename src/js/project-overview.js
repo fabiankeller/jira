@@ -33,7 +33,7 @@
             };
             var chart = new google.visualization.BarChart(document.getElementById('overview_epics_chart'));
             chart.draw(data, options);
-            projectOverviewGadget.resize();
+            // projectOverviewGadget.resize();
         }
     }
 
@@ -73,9 +73,11 @@
             var storyPointSum = 0;
             var storyPointsDone = 0;
             var timeSpent = 0;
+            var percentage = 0;
 
             epic.children.forEach(function (story) {
                 if (story.type !== 'Story') { // filter out non-Stories (Tasks)
+                    console.log('filter out', story);
                     return;
                 }
                 if (ignoreEmpty && !story.sp) {
@@ -85,7 +87,7 @@
                 var sp = 0;
                 if (story.sp) {
                     sp = story.sp;
-                    storyPointSum = sp;
+                    storyPointSum += sp;
                 }
                 if (story.aggregateTimeSpent) {
                     timeSpent += story.aggregateTimeSpent;
@@ -104,7 +106,7 @@
                     storyPointsDone += (numberOfSubtasksDone / numberOfSubtasks) * sp;
                 }
             });
-            
+
             if (epic.aggregateTimeSpent) {
                 timeSpent += epic.aggregateTimeSpent;
             }
@@ -113,10 +115,8 @@
             } else {
                 percentage = storyPointsDone / storyPointSum;
             }
-
-            if (!(ignoreEmpty && storyPointSum === 0)) {
-                retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
-            }
+            
+            retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
         });
         console.log("epics", retval.length, retval);
         return retval;
