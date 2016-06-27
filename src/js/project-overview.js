@@ -46,15 +46,7 @@
 
         google.charts.load('current', {packages: ['corechart', 'bar']});
 
-        $("#generateChartButton").click(function () {
-                var epics = JSON.parse($('#epicsJson').val());
-                var ignoreEmpty = $('#ignoreEmptyEpicsCheckbox').prop('checked');
-                $('#epicsJson').val('');
-
-                epics = processData(epics, ignoreEmpty);
-                drawChart(epics);
-            }
-        );
+        $("#generateChartButton").click(updateChart);
 
         $("#loadDataButton").click(function () {
                 config.version = $('#releaseVersionInputText').val();
@@ -63,10 +55,23 @@
                     .then(function (json) {
                         $('#epicsJson').val(json);
                         resize();
+                        updateChart();
                     });
             }
         );
         resize();
+    }
+
+    function updateChart() {
+        var json = $('#epicsJson').val();
+        var epics = JSON.parse(json);
+        var ignoreEmpty = $('#ignoreEmptyEpicsCheckbox').prop('checked');
+        $('#epicsJson').val('');
+
+        epics = processData(epics, ignoreEmpty);
+        drawChart(epics);
+
+        $('#epicsJson').val(json);
     }
 
     function processData(epics, ignoreEmpty) {
