@@ -57,8 +57,7 @@
     }
 
     function resizeGadget(gadgetId) {
-        console.log('resize', gadgetId);
-        window.parent.AJS.$('#' + gadgetId + ' iframe').css('height', 500);
+        window.parent.AJS.$('#' + gadgetId + ' iframe').css('height', $('html').css('height'));
         window.parent.AJS.$.each(window.parent.AG.DashboardManager.activeLayout.getGadgets(), function (index, gadget) {
             gadget.resize();
         });
