@@ -4,7 +4,8 @@
         getEpics: getEpics,
         getStories: getStories,
         getSubtasks: getSubtasks,
-        getIssuesFromResponse: getIssuesFromResponse
+        getIssuesFromResponse: getIssuesFromResponse,
+        resizeGadget: resizeGadget
     };
 
     function jqlQuery(queryString) {
@@ -53,5 +54,12 @@
 
     function isClosed(statusName) {
         return statusName === 'Closed' || statusName === 'Resolved' || statusName === 'Cancelled';
+    }
+
+    function resizeGadget(gadgetId) {
+        window.AJS.$("#" + gadgetId + " iframe").css("height", $("html").css("height"));
+        window.AJS.$.each(parent.AG.DashboardManager.activeLayout.getGadgets(), function(index, gadget) {
+            gadget.resize();
+        });
     }
 })();

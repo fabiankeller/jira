@@ -3,7 +3,8 @@
     var config = {
         project: 'SAM',
         team: 'Catta',
-        version: ''
+        version: '',
+        gadgetId: 'gadget-50375'
     };
 
     init();
@@ -33,7 +34,7 @@
             };
             var chart = new google.visualization.BarChart(document.getElementById('overview_epics_chart'));
             chart.draw(data, options);
-            // projectOverviewGadget.resize();
+            resize();
         }
     }
 
@@ -61,9 +62,11 @@
                 getDataAsJson()
                     .then(function (json) {
                         $('#epicsJson').val(json);
+                        resize();
                     });
             }
         );
+        resize();
     }
 
     function processData(epics, ignoreEmpty) {
@@ -111,14 +114,14 @@
                 timeSpent += epic.aggregateTimeSpent;
             }
             if (storyPointSum === 0) {
-                if(ignoreEmpty){
+                if (ignoreEmpty) {
                     return;
                 }
                 percentage = 0;
             } else {
                 percentage = storyPointsDone / storyPointSum;
             }
-            
+
             retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
         });
         console.log("epics", retval.length, retval);
@@ -169,5 +172,9 @@
         }
 
         return deferred.promise;
+    }
+
+    function resize() {
+        window.jiraUtils.resizeGadget(config.gadgetId);
     }
 })();
