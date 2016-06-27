@@ -13,7 +13,7 @@
         return Q($.ajax({
             url: url,
             contentType: 'application/json',
-            async: false,
+            async: true,
             dataType: 'json'
         }));
     }
