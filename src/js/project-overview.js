@@ -13,7 +13,7 @@
         google.charts.setOnLoadCallback(drawBarColors);
 
         function drawBarColors() {
-            var temp = [['Epic', 'Story Points', 'Percentage', 'Time spent']];
+            var temp = [['Epic', 'Story Points', 'SPs done', 'Time spent']];
             epicData.forEach(function (entry) {
                 temp.push(entry);
             });
@@ -84,27 +84,20 @@
             var percentage = 0;
 
             epic.children.forEach(function (story) {
-                if (story.type !== 'Story') { // filter out non-Stories (Tasks)
-                    console.log('filter out', story);
-                    return;
-                }
-                if (ignoreEmpty && !story.sp) {
+                if (story.type !== 'Story' || (ignoreEmpty && !story.sp)) { // filter out non-Stories (Tasks) or stories without SP
+                    console.log('filter out issue', story);
                     return;
                 }
 
-                var sp = 0;
-                if (story.sp) {
-                    sp = story.sp;
-                    storyPointSum += sp;
-                }
-                if (story.aggregateTimeSpent) {
-                    timeSpent += story.aggregateTimeSpent;
-                }
+                var sp = numberOrZero(story.sp);
+
+                storyPointSum += sp;
+                timeSpent += numberOrZero(story.aggregateTimeSpent);
 
                 if (epic.closed || story.closed) {
                     storyPointsDone += sp;
                 } else if (story.children) {
-                    var numberOfSubtasks = story.children.length;
+                    var numberOfSubtasks = story.children.length + 1; // plus 1 because the story should not reach 100% before it's closed
                     var numberOfSubtasksDone = 0;
                     story.children.forEach(function (subtask) {
                         if (subtask.closed) {
@@ -115,9 +108,8 @@
                 }
             });
 
-            if (epic.aggregateTimeSpent) {
-                timeSpent += epic.aggregateTimeSpent;
-            }
+            timeSpent += numberOrZero(epic.aggregateTimeSpent);
+
             if (storyPointSum === 0) {
                 if (ignoreEmpty) {
                     return;
@@ -129,8 +121,15 @@
 
             retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
         });
-        console.log("epics", retval.length, retval);
         return retval;
+    }
+
+    function numberOrZero(value) {
+        return isNumeric(value) ? value : 0;
+    }
+
+    function isNumeric(val) {
+        return Number(parseFloat(val)) == val;
     }
 
     function getDataAsJson() {
