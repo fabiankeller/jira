@@ -119,7 +119,7 @@
                 percentage = storyPointsDone / storyPointSum;
             }
 
-            retval.push([epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
+            retval.push([Math.floor(percentage * 100.0) + '% - ' + epic.summary, storyPointSum, storyPointSum * percentage, timeSpent / 3600 / 8.4]);
         });
         return retval;
     }
