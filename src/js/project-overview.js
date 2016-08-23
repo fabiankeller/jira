@@ -84,6 +84,7 @@
             var percentage = 0;
 
             epic.children.forEach(function (story) {
+                timeSpent += numberOrZero(story.aggregateTimeSpent);
                 if (story.type !== 'Story' || (ignoreEmpty && !story.sp)) { // filter out non-Stories (Tasks) or stories without SP
                     console.log('filter out issue', story);
                     return;
@@ -92,7 +93,6 @@
                 var sp = numberOrZero(story.sp);
 
                 storyPointSum += sp;
-                timeSpent += numberOrZero(story.aggregateTimeSpent);
 
                 if (epic.closed || story.closed) {
                     storyPointsDone += sp;
