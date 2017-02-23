@@ -4,7 +4,7 @@
         project: 'SAM',
         team: 'Catta',
         version: '',
-        gadgetId: 'gadget-50378'
+        gadgetId: 'gadget-55110'
     };
 
     init();
