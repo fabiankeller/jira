@@ -1,10 +1,10 @@
-(function (global) {
+(function (window) {
 
     var config = {
         project: 'SAM',
         team: 'Catta',
         version: '',
-        gadgetId: global.gadgetId
+        gadgetId: window.gadgetId
     };
 
     init();
