@@ -1,10 +1,10 @@
-(function () {
+(function (global) {
 
     var config = {
         project: 'SAM',
         team: 'Catta',
         version: '',
-        gadgetId: 'gadget-55110'
+        gadgetId: global.gadgetId
     };
 
     init();
@@ -181,4 +181,4 @@
     function resize() {
         window.jiraUtils.resizeGadget(config.gadgetId);
     }
-})();
+})(window);
