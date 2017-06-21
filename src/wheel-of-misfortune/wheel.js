@@ -87,7 +87,6 @@
 		init : function(optionList) {
 			try {
 				wheel.initWheel();
-				//wheel.initAudio();
 				wheel.initCanvas();
 				wheel.draw();
 
@@ -98,13 +97,7 @@
 			}
 
 		},
-/*
-		initAudio : function() {
-			var sound = document.createElement('audio');
-			sound.setAttribute('src', 'wheel.mp3');
-			wheel.sound = sound;
-		},
-*/
+
 		initCanvas : function() {
 			var canvas = $('#wheel #canvas').get(0);
 
