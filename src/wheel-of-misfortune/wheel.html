@@ -13,11 +13,22 @@
 </div>
 <div id="venues" style="float: left"><ul/></div>
 <div id="wheel">
-<canvas id="canvas" width="1000" height="600"></canvas>
+	<canvas id="canvas" width="1000" height="600"></canvas>
 </div>
 <script src="https://rawgit.com/fabiankeller/jira/master/src/wheel-of-misfortune/wheel.js"></script>
 <script>
-	Wheel.init();
+	var venues = {
+		"1" : "Schmett",
+		"2" : "Igor",
+		"3" : "Pera",
+		"4" : "Vlada",
+		"5" : "Leo",
+		"6" : "Sascha",
+		"7" : "Fabian",
+		"8" : "Frank",
+		"9" : "Christian"
+	};
+	Wheel.init(venues); 
 
 	var segments = new Array();
 	var selectedPeople = new Array();
@@ -29,6 +40,7 @@
 		segments.push(key);
 	});
 
+	
 	Wheel.segments = segments;
 	Wheel.update();
 

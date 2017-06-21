@@ -36,7 +36,6 @@
 				wheel.spinStart = new Date().getTime();
 				wheel.maxSpeed = Math.PI / (16 + Math.random()); // Randomly vary how hard the spin is
 				wheel.frames = 0;
-				//wheel.sound.play();
 
 				wheel.timerHandle = setInterval(wheel.onTimerTick, wheel.timerDelay);
 			}
@@ -76,41 +75,64 @@
 
 				$("#counter").html((wheel.frames / duration * 1000) + " FPS");
 			}
-
-			/*
-			// Display RPM
-			var rpm = (wheel.angleDelta * (1000 / wheel.timerDelay) * 60) / (Math.PI * 2);
-			$("#counter").html( Math.round(rpm) + " RPM" );
-			 */
 		},
 
-		init : function(optionList) {
+		init : function(venues) {
 			try {
+				wheel.initVenues(venues);
 				wheel.initWheel();
 				wheel.initCanvas();
 				wheel.draw();
-
-				$.extend(wheel, optionList);
-
 			} catch (exceptionData) {
 				alert('Wheel is not loaded ' + exceptionData);
 			}
 
 		},
 
+		initVenues : function(venues) {
+			var venueContainer = $('#venues ul');
+			$.each(venues, function(key, item) {
+				venueContainer.append(
+			        $(document.createElement("li"))
+			        .append(
+		                $(document.createElement("input")).attr({
+		                     id:    'venue-' + key
+		                    ,name:  item
+		                    ,value: item
+		                    ,type:  'checkbox'
+		                    ,checked:true
+		                })
+		                .change( function() {
+		                	var cbox = $(this)[0];
+		                	var segments = wheel.segments;
+		                	var i = segments.indexOf(cbox.value);
+
+		                	if (cbox.checked && i == -1) {
+		                		segments.push(cbox.value);
+
+		                	} else if ( !cbox.checked && i != -1 ) {
+		                		segments.splice(i, 1);
+		                	}
+
+		                	segments.sort();
+		                	wheel.update();
+		                } )
+
+			        ).append(
+		                $(document.createElement('label')).attr({
+		                    'for':  'venue-' + key
+		                })
+		                .text( item )
+			        )
+			    )
+			});
+		},
+
 		initCanvas : function() {
 			var canvas = $('#wheel #canvas').get(0);
 
-			if ($.browser.msie) {
-				canvas = document.createElement('canvas');
-				$(canvas).attr('width', 1000).attr('height', 600).attr('id', 'canvas').appendTo('.wheel');
-				canvas = G_vmlCanvasManager.initElement(canvas);
-			}
-
 			canvas.addEventListener("click", wheel.spin, false);
-			console.log(canvas);
 			wheel.canvasContext = canvas.getContext("2d");
-			console.log(wheel.canvasContext);
 		},
 
 		initWheel : function() {
@@ -270,54 +292,7 @@
 		},
 	}
 
-	var venues = {
-		"1" : "Schmett",
-		"2" : "Igor",
-		"3" : "Pera",
-		"4" : "Vlada",
-		"5" : "Leo",
-		"6" : "Sascha",
-		"7" : "Fabian",
-		"8" : "Frank",
-		"9" : "Christian"
-	}
-
-	var venueContainer = $('#venues ul');
-	$.each(venues, function(key, item) {
-		venueContainer.append(
-	        $(document.createElement("li"))
-	        .append(
-                $(document.createElement("input")).attr({
-                     id:    'venue-' + key
-                    ,name:  item
-                    ,value: item
-                    ,type:  'checkbox'
-                    ,checked:true
-                })
-                .change( function() {
-                	var cbox = $(this)[0];
-                	var segments = wheel.segments;
-                	var i = segments.indexOf(cbox.value);
-
-                	if (cbox.checked && i == -1) {
-                		segments.push(cbox.value);
-
-                	} else if ( !cbox.checked && i != -1 ) {
-                		segments.splice(i, 1);
-                	}
-
-                	segments.sort();
-                	wheel.update();
-                } )
-
-	        ).append(
-                $(document.createElement('label')).attr({
-                    'for':  'venue-' + key
-                })
-                .text( item )
-	        )
-	    )
-	});
+	
 
 	// what is this sort needed for?
 	//$('#venues ul>li').tsort("input", {attr: "value"});
