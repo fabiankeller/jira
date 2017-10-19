@@ -2,7 +2,7 @@
 
     var config = {
         project: 'SAM',
-        team: 'Catta',
+        team: window.team,
         version: '',
         gadgetId: window.gadgetId
     };
