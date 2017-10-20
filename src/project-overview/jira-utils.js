@@ -20,7 +20,7 @@
     }
 
     function getEpics(project, version, team) {
-        return jqlQuery('project = ' + project + ' AND issuetype = Epic AND fixVersion = "' + version + '" AND \'Agile Team\' = ' + team);
+        return jqlQuery('project = ' + project + ' AND issuetype = Epic AND fixVersion = "' + version + '" AND \'Agile Team\' = \'' + team + '\'');
     }
 
     function getStories(epicId) {
